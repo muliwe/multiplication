@@ -1,7 +1,7 @@
 <template>
   <main>
     <div>
-      <echo as-class="test" text="2"></echo> x <echo as-class="test" text="2"></echo> = <echo as-class="test" text="4"></echo>
+      <echo as-class="test" :text="x"></echo> x <echo as-class="test" text="2"></echo> = <echo as-class="test" text="4"></echo>
     </div>
 	<!--div>
 		<span id=n1>0</span><span id=x1 class="correct">2</span><span id=y1 class="empty"></span><span>x</span><span id=n2>2</span><span id=x2 class="empty"></span><span id=y2 class="empty"></span><span>=</span><span id=n3>2</span><span id=x3>4</span><span id=y3 class="empty"></span>
@@ -25,7 +25,11 @@
     components: {
       Echo
     },
-    mounted () {
+
+    data () {
+      return {
+        x: '...'
+      }
     },
     computed: {
       ...mapGetters([
@@ -34,6 +38,16 @@
     methods: {
       ...mapActions([
       ])
+    },
+    mounted () {
+      let vm = this
+      window.addEventListener('keyup', function (event) {
+        console.log(event)
+        // If down arrow was pressed...
+        if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(event.key)) {
+          vm.x = event.key
+        }
+      })
     }
   }
 </script>
