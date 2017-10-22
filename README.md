@@ -1,2 +1,7 @@
-# multiplication
-multiplication training app
+# Multiplication
+
+Multiplication training app.
+
+`npm install`
+
+`npm run dev`
