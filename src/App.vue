@@ -1,13 +1,13 @@
 <template>
 <div class="app">
-  <div class="header">
+  <!--div class="header">
   <header-bar></header-bar>
-  </div>
+  </div-->
   <div class="page">
     <router-view></router-view>
-    <div class="help-text">
+    <!--div class="help-text">
       <p>Таблица умножения.</p>
-    </div>
+    </div-->
   </div>
 </div>
 </template>
@@ -41,7 +41,7 @@ body {
 
 .page {
   width: 100%;
-  padding: 30px 50px;
+  padding: 0px 0px;
 }
 
 .help-text {
