@@ -25,10 +25,9 @@
     components: {
       Echo
     },
-
     data () {
       return {
-        x: '...'
+        x: '…'
       }
     },
     computed: {
@@ -42,7 +41,7 @@
     mounted () {
       let vm = this
       window.addEventListener('keyup', function (event) {
-        console.log(event)
+        // console.log(event)
         // If down arrow was pressed...
         if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(event.key)) {
           vm.x = event.key

@@ -15,6 +15,11 @@ export default {
     }
   },
   computed: {
+  },
+  watch: {
+    text: function (value) {
+      console.log('text changed to ' + value)
+    }
   }
 }
 </script>
