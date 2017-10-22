@@ -1,19 +1,21 @@
 <template>
   <main>
     <div>
-      <echo as-class="test" :text="x"></echo> x <echo as-class="test" text="2"></echo> = <echo as-class="test" text="4"></echo>
+    <echo v-for="number in numbers[0]" :text="number.value" :as-class="number.class">
+    </echo><span>x</span><echo v-for="number in numbers[1]" :text="number.value" :as-class="number.class">
+    </echo><span>=</span><echo v-for="number in numbers[2]" :text="number.value" :as-class="number.class"></echo>
     </div>
-	<!--div>
-		<span id=n1>0</span><span id=x1 class="correct">2</span><span id=y1 class="empty"></span><span>x</span><span id=n2>2</span><span id=x2 class="empty"></span><span id=y2 class="empty"></span><span>=</span><span id=n3>2</span><span id=x3>4</span><span id=y3 class="empty"></span>
-	</div>
-	<div>
-		<span id=n1>1</span><span id=x1 class="incorrect">2</span><span id=y1 class="empty"></span><span>x</span>
-		<span id=n2>2</span><span id=x2></span><span id=y2 class="empty"></span> =
-		<span id=n3>2</span><span id=x3>4</span><span id=y3 class="empty"></span>
-	</div>
-	<div>
-		<span id=n1>1</span><span id=x1 class="question">…</span><span id=y1 class="empty"></span><span>x</span><span id=n2>2</span><span id=x2 class="empty"></span><span id=y2 class="empty"></span> <span>=</span><span id=n3>2</span><span id=x3>4</span><span id=y3 class="empty"></span>
-	</div-->
+  <!--div>
+    <span id=n1>0</span><span id=x1 class="correct">2</span><span id=y1 class="'empty'"></span><span>x</span><span id=n2>2</span><span id=x2 class="'empty'"></span><span id=y2 class="'empty'"></span><span>=</span><span id=n3>2</span><span id=x3>4</span><span id=y3 class="'empty'"></span>
+  </div>
+  <div>
+    <span id=n1>1</span><span id=x1 class="incorrect">2</span><span id=y1 class="'empty'"></span><span>x</span>
+    <span id=n2>2</span><span id=x2></span><span id=y2 class="'empty'"></span> =
+    <span id=n3>2</span><span id=x3>4</span><span id=y3 class="'empty'"></span>
+  </div>
+  <div>
+    <span id=n1>1</span><span id=x1 class="question">…</span><span id=y1 class="'empty'"></span><span>x</span><span id=n2>2</span><span id=x2 class="'empty'"></span><span id=y2 class="'empty'"></span> <span>=</span><span id=n3>2</span><span id=x3>4</span><span id=y3 class="'empty'"></span>
+  </div-->
   </main>
 </template>
 
@@ -27,7 +29,59 @@
     },
     data () {
       return {
-        x: '…'
+        numbers: [
+          [
+            {
+              value: '',
+              correctValue: '',
+              class: 'empty'
+            },
+            {
+              value: '…',
+              correctValue: '2',
+              class: 'question'
+            },
+            {
+              value: '',
+              correctValue: '',
+              class: 'empty'
+            }
+          ],
+          [
+            {
+              value: '',
+              correctValue: '',
+              class: 'empty'
+            },
+            {
+              value: '2',
+              correctValue: '',
+              class: null
+            },
+            {
+              value: '',
+              correctValue: '',
+              class: 'empty'
+            }
+          ],
+          [
+            {
+              value: '',
+              correctValue: '',
+              class: 'empty'
+            },
+            {
+              value: '4',
+              correctValue: '',
+              class: null
+            },
+            {
+              value: '',
+              correctValue: '',
+              class: 'empty'
+            }
+          ]
+        ]
       }
     },
     computed: {
@@ -44,7 +98,8 @@
         // console.log(event)
         // If down arrow was pressed...
         if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(event.key)) {
-          vm.x = event.key
+          vm.numbers[0][1].value = event.key
+          vm.numbers[0][1].class = event.key === vm.numbers[0][1].correctValue ? 'correct' : 'incorrect'
         }
       })
     }
