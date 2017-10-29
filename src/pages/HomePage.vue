@@ -124,7 +124,7 @@ main div {
   color: black;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   /*text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);*/
-  font-family: "Roboto", Arial;
+  font-family: "Roboto", Arial, sans-serif;
   font-size: 8rem;
   width: 80%;
   padding: 20px;
@@ -148,9 +148,9 @@ main div span {
   overflow-x: hidden;
 }
 main div span.empty {
-  width: 0rem;
-  max-width: 0rem;
-  min-width: 0rem;
+  width: 0;
+  max-width: 0;
+  min-width: 0;
   overflow-x: hidden;
 }
 main div span.correct {
