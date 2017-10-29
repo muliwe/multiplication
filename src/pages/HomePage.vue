@@ -15,88 +15,25 @@
   import { mapGetters, mapActions } from 'vuex'
   import Echo from '@/components/Echo'
 
-  const UNDEFINED = '…'
-
   export default {
     components: {
       Echo
     },
-    data () {
-      return {
-        numbers: [
-          [
-            {
-              id: 'n00',
-              value: '',
-              correctValue: '',
-              class: 'empty'
-            },
-            {
-              id: 'n01',
-              value: UNDEFINED,
-              correctValue: '4',
-              class: 'question'
-            },
-            {
-              id: 'n02',
-              value: '',
-              correctValue: '',
-              class: 'empty'
-            }
-          ],
-          [
-            {
-              id: 'n10',
-              value: '',
-              correctValue: '',
-              class: 'empty'
-            },
-            {
-              id: 'n11',
-              value: '5',
-              correctValue: '',
-              class: null
-            },
-            {
-              id: 'n12',
-              value: '',
-              correctValue: '',
-              class: 'empty'
-            }
-          ],
-          [
-            {
-              id: 'n20',
-              value: '2',
-              correctValue: '',
-              class: null
-            },
-            {
-              id: 'n21',
-              value: '0',
-              correctValue: '',
-              class: null
-            },
-            {
-              id: 'n22',
-              value: '',
-              correctValue: '',
-              class: 'empty'
-            }
-          ]
-        ]
-      }
-    },
     computed: {
-      ...mapGetters([
-      ])
+      ...mapGetters({
+        numbers: 'getNumbers'
+      })
     },
     methods: {
       ...mapActions([
+        'generateTask'
       ])
     },
     mounted () {
       let vm = this
+
+      vm.generateTask()
+
       window.addEventListener('keyup', function (event) {
         // console.log(event)
         // If down arrow was pressed...
@@ -106,9 +43,17 @@
               const elem = vm.numbers[i][j]
 
               if (elem.value && elem.correctValue && elem.value !== elem.correctValue) {
+                const isTrueAnswer = event.key === elem.correctValue
+
                 elem.value = event.key
-                elem.class = event.key === elem.correctValue ? 'correct' : 'incorrect'
-                vm.$refs[event.key === elem.correctValue ? 'audioOk' : 'audioErr'].play()
+                elem.class = isTrueAnswer ? 'correct' : 'incorrect'
+                vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
+
+                if (isTrueAnswer) {
+                  setTimeout(function () {
+                    vm.generateTask()
+                  }, 2000)
+                }
               }
             }
           }

@@ -1,23 +1,13 @@
 <template>
 <div class="app">
-  <!--div class="header">
-  <header-bar></header-bar>
-  </div-->
   <div class="page">
     <router-view></router-view>
-    <!--div class="help-text">
-      <p>Таблица умножения.</p>
-    </div-->
   </div>
 </div>
 </template>
 
 <script>
-import HeaderBar from '@/components/HeaderBar'
 export default {
-  components: {
-    HeaderBar
-  },
   name: 'app'
 }
 </script>
@@ -33,19 +23,8 @@ body {
   width: 100%;
 }
 
-.header {
-  border-bottom: 1px solid #b3b3b3;
-  width: 100%;
-  padding: 30px 50px;
-}
-
 .page {
   width: 100%;
-  padding: 0px 0px;
-}
-
-.help-text {
-  margin-top: 20px;
-  font-size: 12px;
+  padding: 0 0;
 }
 </style>
