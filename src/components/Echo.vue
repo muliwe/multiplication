@@ -1,5 +1,7 @@
 <template>
-  <span v-bind:class="asClass">{{value}}</span>
+  <transition name="fade" mode="out-in">
+    <span v-bind:class="asClass">{{value}}</span>
+  </transition>
 </template>
 
 <script>
@@ -24,12 +26,40 @@ export default {
   },
   watch: {
     text: function (value) {
-      console.log('text changed to ' + value)
-      this.value = value
+      // console.log('text changed to ' + value)
+      const vm = this
+
+      let from = Number(vm.value)
+      const to = Number(value)
+
+      if (from && to) {
+        loop(from, to, vm)
+      } else {
+        vm.value = value
+      }
     }
+  }
+}
+
+function loop (from, to, vm) {
+  if (from !== to) {
+    if (from < to) {
+      from++
+    } else if (from < to) {
+      from--
+    } else {
+      from = to
+    }
+    vm.value = '' + from
+    setTimeout(function () {
+      loop(from, to, vm)
+    }, 25)
   }
 }
 </script>
 
 <style>
+  .fade-enter-active {
+    transition: all 0.5s ease;
+  }
 </style>
