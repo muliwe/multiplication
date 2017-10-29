@@ -5,8 +5,8 @@
     </echo><span class=sign>×</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
     </echo><span class=sign>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
     </div>
-    <audio ref="audioOk" src="/static/sounds/ok.wav"></audio>
-    <audio ref="audioErr" src="/static/sounds/err.wav"></audio>
+    <audio ref="audioOk" src="./static/sounds/ok.wav"></audio>
+    <audio ref="audioErr" src="./static/sounds/err.wav"></audio>
     <!-- https://www.audioblocks.com/royalty-free-audio/cartoon-sound-effects https://freesound.org -->
   </main>
 </template>
