@@ -5,17 +5,6 @@
     </echo><span>x</span><echo v-for="number in numbers[1]" :text="number.value" :as-class="number.class">
     </echo><span>=</span><echo v-for="number in numbers[2]" :text="number.value" :as-class="number.class"></echo>
     </div>
-  <!--div>
-    <span id=n1>0</span><span id=x1 class="correct">2</span><span id=y1 class="'empty'"></span><span>x</span><span id=n2>2</span><span id=x2 class="'empty'"></span><span id=y2 class="'empty'"></span><span>=</span><span id=n3>2</span><span id=x3>4</span><span id=y3 class="'empty'"></span>
-  </div>
-  <div>
-    <span id=n1>1</span><span id=x1 class="incorrect">2</span><span id=y1 class="'empty'"></span><span>x</span>
-    <span id=n2>2</span><span id=x2></span><span id=y2 class="'empty'"></span> =
-    <span id=n3>2</span><span id=x3>4</span><span id=y3 class="'empty'"></span>
-  </div>
-  <div>
-    <span id=n1>1</span><span id=x1 class="question">…</span><span id=y1 class="'empty'"></span><span>x</span><span id=n2>2</span><span id=x2 class="'empty'"></span><span id=y2 class="'empty'"></span> <span>=</span><span id=n3>2</span><span id=x3>4</span><span id=y3 class="'empty'"></span>
-  </div-->
   </main>
 </template>
 
@@ -123,7 +112,6 @@ main {
 main div {
   color: black;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  /*text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);*/
   font-family: "Roboto", Arial, sans-serif;
   font-size: 8rem;
   width: 80%;
