@@ -119,6 +119,9 @@
 </script>
 
 <style>
+html {
+  font-size:2vw;
+}
 main {
   height: 100vh;
   width: 100%;
@@ -194,8 +197,5 @@ main div span.question {
       font-size: 6.6rem;
       line-height: 10rem;
     }
-}
-html {
-    font-size:2vw;
 }
 </style>
