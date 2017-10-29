@@ -5,6 +5,8 @@
     </echo><span class=sign>×</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
     </echo><span class=sign>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
     </div>
+    <div class="keyboard"><keyboard v-model="input" layouts="12345|67890" @input="changed" :maxlength="2"></keyboard></div>
+
     <audio ref="audioOk" src="./static/sounds/ok.wav"></audio>
     <audio ref="audioErr" src="./static/sounds/err.wav"></audio>
     <!-- https://www.audioblocks.com/royalty-free-audio/cartoon-sound-effects https://freesound.org -->
@@ -13,11 +15,20 @@
 
 <script>
   import { mapGetters, mapActions } from 'vuex'
+  import Keyboard from 'vue-keyboard'
   import Echo from '@/components/Echo'
+
+  const UNDEFINED = '…'
 
   export default {
     components: {
-      Echo
+      Echo,
+      Keyboard
+    },
+    data: function () {
+      return {
+        input: ''
+      }
     },
     computed: {
       ...mapGetters({
@@ -27,7 +38,14 @@
     methods: {
       ...mapActions([
         'generateTask'
-      ])
+      ]),
+      changed (value) {
+        let vm = this
+        const pressed = value[value.length - 1]
+
+        this.input = pressed
+        change(pressed, vm)
+      }
     },
     mounted () {
       let vm = this
@@ -36,31 +54,42 @@
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
-        // If down arrow was pressed...
-        if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(event.key)) {
-          for (let i = 0; i < vm.numbers.length; i++) {
-            for (let j = 0; j < vm.numbers[i].length; j++) {
-              const elem = vm.numbers[i][j]
-
-              if (elem.value && elem.correctValue && elem.value !== elem.correctValue) {
-                const isTrueAnswer = event.key === elem.correctValue
-
-                elem.value = event.key
-                elem.class = isTrueAnswer ? 'correct' : 'incorrect'
-                vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
-
-                if (isTrueAnswer) {
-                  setTimeout(function () {
-                    vm.generateTask()
-                  }, 2000)
-                }
-              }
-            }
-          }
-        }
+        change(event.key, vm)
       })
     }
   }
+
+  function change (value, vm) {
+    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete'].includes(value)) {
+      for (let i = 0; i < vm.numbers.length; i++) {
+        for (let j = 0; j < vm.numbers[i].length; j++) {
+          const elem = vm.numbers[i][j]
+
+          if (elem.value && elem.correctValue && elem.value !== elem.correctValue) {
+            if (['Backspace', 'Delete'].includes(value)) {
+              elem.value = UNDEFINED
+              elem.class = 'question'
+
+              return
+            }
+
+            const isTrueAnswer = value === elem.correctValue
+
+            elem.value = value
+            elem.class = isTrueAnswer ? 'correct' : 'incorrect'
+            vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
+
+            if (isTrueAnswer) {
+              setTimeout(function () {
+                vm.generateTask()
+              }, 2000)
+            }
+          }
+        }
+      }
+    }
+  }
+
 </script>
 
 <style>
@@ -127,6 +156,23 @@ main div span.incorrect {
 main div span.question {
   color: #0000ff;
 }
+
+div.keyboard {
+  position: absolute;
+  bottom: 4rem;
+  width: 100%;
+}
+div.keyboard div {
+  line-height: 0.5;
+}
+.vue-keyboard-key {
+  font-size: 2rem !important;
+}
+.vue-keyboard-row {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media screen and (max-width: 480px) and (orientation: portrait) {
     main div {
       width: 100%;
@@ -142,5 +188,12 @@ main div span.question {
       font-size: 6.6rem;
       line-height: 10rem;
     }
+  div.keyboard {
+    bottom: 0;
+  }
+  div.keyboard div {
+    line-height: 0.3;
+  }
 }
+
 </style>
