@@ -2,8 +2,8 @@
   <main>
     <div>
     <echo v-for="number in numbers[0]" :key="number.id" :text="number.value" :as-class="number.class">
-    </echo><span>x</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
-    </echo><span>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
+    </echo><span class=sign>×</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
+    </echo><span class=sign>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
     </div>
     <audio ref="audioOk" src="/static/sounds/ok.wav"></audio>
     <audio ref="audioErr" src="/static/sounds/err.wav"></audio>
@@ -34,7 +34,7 @@
             {
               id: 'n01',
               value: UNDEFINED,
-              correctValue: '2',
+              correctValue: '4',
               class: 'question'
             },
             {
@@ -53,7 +53,7 @@
             },
             {
               id: 'n11',
-              value: '2',
+              value: '5',
               correctValue: '',
               class: null
             },
@@ -67,13 +67,13 @@
           [
             {
               id: 'n20',
-              value: '',
+              value: '2',
               correctValue: '',
-              class: 'empty'
+              class: null
             },
             {
               id: 'n21',
-              value: '4',
+              value: '0',
               correctValue: '',
               class: null
             },
@@ -141,7 +141,8 @@ main div {
   padding: 20px;
   text-align: center;
   white-space: nowrap;
-  overflow-x: hidden;
+  overflow: hidden;
+  line-height:1;
 }
 main div:after {
   visibility: hidden;
@@ -156,7 +157,12 @@ main div span {
   width: 5rem;
   max-width: 5rem;
   min-width: 5rem;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+main div span.sign {
+  width: 7rem;
+  max-width: 7rem;
+  min-width: 7rem;
 }
 main div span.empty {
   width: 0;
@@ -172,5 +178,24 @@ main div span.incorrect {
 }
 main div span.question {
   color: #0000ff;
+}
+@media screen and (max-width: 480px) and (orientation: portrait) {
+    main div {
+      width: 100%;
+      padding:0;
+    }
+}
+@media screen and (max-width: 720px) and (orientation: landscape) {
+    main div {
+      width: 90%;
+    }
+   main div span.question {
+      color: #0000ff;
+      font-size: 6.6rem;
+      line-height: 10rem;
+    }
+}
+html {
+    font-size:2vw;
 }
 </style>
