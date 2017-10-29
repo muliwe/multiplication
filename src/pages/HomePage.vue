@@ -1,9 +1,9 @@
 <template>
   <main>
     <div>
-    <echo v-for="number in numbers[0]" :text="number.value" :as-class="number.class">
-    </echo><span>x</span><echo v-for="number in numbers[1]" :text="number.value" :as-class="number.class">
-    </echo><span>=</span><echo v-for="number in numbers[2]" :text="number.value" :as-class="number.class"></echo>
+    <echo v-for="number in numbers[0]" :key="number.id" :text="number.value" :as-class="number.class">
+    </echo><span>x</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
+    </echo><span>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
     </div>
   </main>
 </template>
@@ -11,6 +11,8 @@
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import Echo from '@/components/Echo'
+
+  const UNDEFINED = '…'
 
   export default {
     components: {
@@ -21,16 +23,19 @@
         numbers: [
           [
             {
+              id: 'n00',
               value: '',
               correctValue: '',
               class: 'empty'
             },
             {
-              value: '…',
+              id: 'n01',
+              value: UNDEFINED,
               correctValue: '2',
               class: 'question'
             },
             {
+              id: 'n02',
               value: '',
               correctValue: '',
               class: 'empty'
@@ -38,16 +43,19 @@
           ],
           [
             {
+              id: 'n10',
               value: '',
               correctValue: '',
               class: 'empty'
             },
             {
+              id: 'n11',
               value: '2',
               correctValue: '',
               class: null
             },
             {
+              id: 'n12',
               value: '',
               correctValue: '',
               class: 'empty'
@@ -55,16 +63,19 @@
           ],
           [
             {
+              id: 'n20',
               value: '',
               correctValue: '',
               class: 'empty'
             },
             {
+              id: 'n21',
               value: '4',
               correctValue: '',
               class: null
             },
             {
+              id: 'n22',
               value: '',
               correctValue: '',
               class: 'empty'
