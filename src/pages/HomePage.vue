@@ -159,7 +159,7 @@ main div span.question {
 
 div.keyboard {
   position: absolute;
-  bottom: 4rem;
+  bottom: 0.5rem;
   width: 100%;
 }
 div.keyboard div {
@@ -167,16 +167,21 @@ div.keyboard div {
 }
 .vue-keyboard-key {
   font-size: 2rem !important;
+  padding: 1rem !important;
 }
 .vue-keyboard-row {
   margin-left: auto;
   margin-right: auto;
+  font-size: 4rem;
 }
 
 @media screen and (max-width: 480px) and (orientation: portrait) {
     main div {
       width: 100%;
       padding:0;
+    }
+    div.keyboard {
+      bottom: 14rem;
     }
 }
 @media screen and (max-width: 720px) and (orientation: landscape) {
@@ -185,8 +190,6 @@ div.keyboard div {
     }
    main div span.question {
       color: #0000ff;
-      font-size: 6.6rem;
-      line-height: 10rem;
     }
   div.keyboard {
     bottom: 0;
@@ -195,5 +198,4 @@ div.keyboard div {
     line-height: 0.3;
   }
 }
-
 </style>
