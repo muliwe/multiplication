@@ -1,8 +1,8 @@
 {
-  "name": "vue-spa",
-  "version": "1.0.0",
-  "description": "Vue.Js Single Page App example",
-  "author": "Anirudh Sanjeev <skyronic@gmail.com>",
+  "name": "Multiplication Trainer",
+  "version": "0.1.0",
+  "description": "Multiplication Trainer for Primary School Students",
+  "author": "Mumbra & Muliwe <kinokadr@kinokadr.ru>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
