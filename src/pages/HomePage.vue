@@ -6,7 +6,9 @@
     </echo><span class=sign>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
     </div>
     <div class="keyboard"><keyboard v-model="input" layouts="12345|67890" @input="changed" :maxlength="2"></keyboard></div>
-
+    
+    <div id="progressBar"></div>
+    
     <audio ref="audioOk" src="./static/sounds/ok.wav"></audio>
     <audio ref="audioErr" src="./static/sounds/err.wav"></audio>
     <!-- https://www.audioblocks.com/royalty-free-audio/cartoon-sound-effects https://freesound.org -->
