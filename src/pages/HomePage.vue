@@ -19,6 +19,26 @@
   import Echo from '@/components/Echo'
 
   const UNDEFINED = '…'
+  const BONUS_TIME = 6000
+  const MAX_TIME = 15000
+
+  const LEVELS = [
+    {
+      maxProgress: 10
+    },
+    {
+      maxProgress: 20
+    },
+    {
+      maxProgress: 40
+    },
+    {
+      maxProgress: 80
+    },
+    {
+      maxProgress: 160
+    }
+  ]
 
   export default {
     components: {
@@ -27,7 +47,11 @@
     },
     data: function () {
       return {
-        input: ''
+        input: '',
+        progress: 0, // @todo get from storage
+        currentLevel: 0, // @todo get from storage
+        startTime: new Date().getTime(),
+        errors: 0
       }
     },
     computed: {
@@ -41,27 +65,25 @@
       ]),
       changed (value) {
         let vm = this
-        const pressed = value[value.length - 1]
-
-        // blabla
+        const pressed = value[value.length - 1] // input trim
 
         this.input = pressed
-        change(pressed, vm)
+        valueChange(pressed, vm)
       }
     },
     mounted () {
       let vm = this
 
-      vm.generateTask()
+      vm.generateTask(vm.currentLevel)
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
-        change(event.key, vm)
+        valueChange(event.key, vm)
       })
     }
   }
 
-  function change (value, vm) {
+  function valueChange (value, vm) {
     if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete'].includes(value)) {
       for (let i = 0; i < vm.numbers.length; i++) {
         for (let j = 0; j < vm.numbers[i].length; j++) {
@@ -75,21 +97,59 @@
               return
             }
 
-            const isTrueAnswer = value === elem.correctValue
-
-            elem.value = value
-            elem.class = isTrueAnswer ? 'correct' : 'incorrect'
-            vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
-
-            if (isTrueAnswer) {
-              setTimeout(function () {
-                vm.generateTask()
-              }, 2000)
-            }
+            check(value, elem, vm)
           }
         }
       }
     }
+  }
+
+  function check (value, elem, vm) {
+    const isTrueAnswer = value === elem.correctValue
+
+    elem.value = value
+    elem.class = isTrueAnswer ? 'correct' : 'incorrect'
+    vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
+
+    if (isTrueAnswer) {
+      complete(vm)
+    } else {
+      // @todo wrong answer, place some help here
+
+      vm.errors++
+    }
+  }
+
+  function complete (vm) {
+    const timDiff = new Date().getTime() - vm.startTime
+
+    progressUp(timDiff, vm)
+
+    setTimeout(function () {
+      vm.errors = vm.errors > 1 ? 1 : 0 // extra task if too many errors
+      vm.startTime = new Date().getTime()
+      vm.generateTask(vm.currentLevel)
+    }, 2000)
+  }
+
+  function progressUp (timDiff, vm) {
+    vm.progress += (vm.errors > 0 ? 0
+        : (timDiff >= MAX_TIME ? 0
+            : (timDiff < BONUS_TIME ? 1 + Math.round(BONUS_TIME / timDiff) : 1)
+        )
+    )
+
+    if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length - 1) {
+      vm.progress -= LEVELS[vm.currentLevel].maxProgress
+      vm.currentLevel++
+    } if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length) {
+      // max progress reached
+      vm.progress = LEVELS[vm.currentLevel].maxProgress
+    }
+
+    // @todo set to storage
+
+    console.log(vm.progress, vm.currentLevel, timDiff, vm.errors)
   }
 
 </script>
