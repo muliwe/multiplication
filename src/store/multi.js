@@ -21,7 +21,9 @@ const mutations = {
   generate_task (state, [currentLevel, maxLevel]) {
     let n = generateNumber(state, currentLevel, maxLevel)
 
-    while (n.n1 === state.lastNumbers.n1 && n.n2 === state.lastNumbers.n2) {
+    // anti-[:::]
+    while ((n.n1 === state.lastNumbers.n1 && n.n2 === state.lastNumbers.n2) ||
+      (n.n1 === state.lastNumbers.n2 && n.n2 === state.lastNumbers.n1)) {
       n = generateNumber(state, currentLevel, maxLevel)
     }
 
