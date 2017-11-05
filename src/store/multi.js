@@ -109,7 +109,7 @@ const mutations = {
     // console.log(JSON.stringify(NUMBERS))
 
     state.numbers = NUMBERS
-    state.complexity = (POSITION[0] < 2 ? 1 : POSITION[1] === 1 ? 0.6 : 0.7) *
+    state.complexity = (POSITION[0] < 2 ? 1 : POSITION[1] === 1 ? 0.7 : 0.8) *
       (currentLevel > state.actualLevel ? 0.7
         : (currentLevel < state.actualLevel ? 1.5 : 1)
       )
