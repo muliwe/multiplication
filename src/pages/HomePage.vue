@@ -43,6 +43,8 @@
         let vm = this
         const pressed = value[value.length - 1]
 
+        // blabla
+
         this.input = pressed
         change(pressed, vm)
       }
