@@ -56,7 +56,9 @@
     },
     computed: {
       ...mapGetters({
-        numbers: 'getNumbers'
+        numbers: 'getNumbers',
+        complexity: 'getComplexity',
+        position: 'getPosition'
       })
     },
     methods: {
@@ -65,9 +67,9 @@
       ]),
       changed (value) {
         let vm = this
-        const pressed = value[value.length - 1] // input trim
+        const pressed = value[value.length - 1]
 
-        this.input = pressed
+        this.input = pressed // input trim
         valueChange(pressed, vm)
       }
     },
@@ -84,22 +86,21 @@
   }
 
   function valueChange (value, vm) {
-    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete'].includes(value)) {
-      for (let i = 0; i < vm.numbers.length; i++) {
-        for (let j = 0; j < vm.numbers[i].length; j++) {
-          const elem = vm.numbers[i][j]
+    const POSSIBLE_KEYS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete']
+    const DELETE_KEYS = ['Backspace', 'Delete']
 
-          if (elem.value && elem.correctValue && elem.value !== elem.correctValue) {
-            if (['Backspace', 'Delete'].includes(value)) {
-              elem.value = UNDEFINED
-              elem.class = 'question'
+    if (POSSIBLE_KEYS.includes(value)) {
+      const elem = vm.numbers[vm.position[0]][vm.position[1]]
 
-              return
-            }
+      if (elem.value && elem.correctValue && elem.value !== elem.correctValue) {
+        if (DELETE_KEYS.includes(value)) {
+          elem.value = UNDEFINED
+          elem.class = 'question'
 
-            check(value, elem, vm)
-          }
+          return
         }
+
+        check(value, elem, vm)
       }
     }
   }
@@ -133,11 +134,13 @@
   }
 
   function progressUp (timDiff, vm) {
-    vm.progress += (vm.errors > 0 ? 0
+    const multiplier = (vm.errors > 0 ? 0
         : (timDiff >= MAX_TIME ? 0
             : (timDiff < BONUS_TIME ? 1 + Math.round(BONUS_TIME / timDiff) : 1)
         )
     )
+
+    vm.progress += Math.floor(multiplier * vm.complexity * 10) / 10
 
     if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length - 1) {
       vm.progress -= LEVELS[vm.currentLevel].maxProgress
@@ -149,7 +152,7 @@
 
     // @todo set to storage
 
-    console.log(vm.progress, vm.currentLevel, timDiff, vm.errors)
+    console.log(vm.progress, vm.currentLevel, multiplier, vm.complexity, timDiff, vm.errors)
   }
 
 </script>
