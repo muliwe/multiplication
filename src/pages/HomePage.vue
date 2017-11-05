@@ -197,7 +197,7 @@ main div {
   overflow: hidden;
   line-height:1;
 }
-main div:after {
+main > div:after {
   visibility: hidden;
   display: block;
   font-size: 0;
@@ -280,7 +280,7 @@ header {
     position: absolute;
     top: 0;
     font-size: 1rem;
-    width:80%
+    width:60%
 }
 div#progressBar {
     border: solid #007bff 2px;
@@ -296,10 +296,13 @@ div#progressBar div {
     overflow-x:hidden;
     border:0;
     border-radius: 0;
+    padding: 2rem;
 }
 div#level {
     font-size:2.0rem;
     padding: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 div#level span {
     border: solid #007bff 1px;
