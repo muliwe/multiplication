@@ -5,8 +5,8 @@
     <title>Таблица умножения. Онлайн-тренажёр</title>
     <meta name="description" content="Самообучающийся тренажёр для изучения таблицы умножения">
     <meta name="keywords" content="таблица умножения, тренажёр">
-    <meta property="og:image" content="static/images/logo.jpg" />
-    <meta property="og:site_name" content="" />
+    <meta property="og:image" content="http://sonrazuma.ru/multiplication/static/images/logo.jpg" />
+    <meta property="og:site_name" content="sonrazuma.ru" />
     <meta name="X-UA-Compatible" content="IE=edge,chrome=1, env=ie">
     <link rel="icon" href="/favicon.ico">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -29,9 +29,27 @@
         };
 	//-->
    </script>
+    <style>
+        <!--
+        div.counter {
+        display:inline;
+        height:0px;
+        left:-1000px;
+        margin:0px;
+        padding:0px;
+        position:absolute;
+        top:-1000px;
+        visibility:hidden;
+        width:0px;
+        }
+        -->
+    </style>
    <title>Таблица умножения</title>
  </head>
  <body>
+    <div class=counter>
+    <!--LiveInternet counter--><script language="JavaScript">document.write('<img src="http://counter.yadro.ru/hit?r' + escape(document.referrer) + ((typeof(screen)=='undefined')?'':';s'+screen.width+'*'+screen.height+'*'+(screen.colorDepth?screen.colorDepth:screen.pixelDepth)) + ';' + Math.random() + '" width=1 height=1 alt="">')</script><!--/LiveInternet-->
+    </div>
    <div id="app"></div>
    <!-- built files will be auto injected -->
  </body>

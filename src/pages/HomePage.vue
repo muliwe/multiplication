@@ -19,6 +19,26 @@
   import Echo from '@/components/Echo'
 
   const UNDEFINED = '…'
+  const BONUS_TIME = 6000
+  const MAX_TIME = 15000
+
+  const LEVELS = [
+    {
+      maxProgress: 10
+    },
+    {
+      maxProgress: 20
+    },
+    {
+      maxProgress: 40
+    },
+    {
+      maxProgress: 80
+    },
+    {
+      maxProgress: 160
+    }
+  ]
 
   export default {
     components: {
@@ -27,12 +47,18 @@
     },
     data: function () {
       return {
-        input: ''
+        input: '',
+        progress: 0, // @todo get from storage
+        currentLevel: 0, // @todo get from storage
+        startTime: new Date().getTime(),
+        errors: 0
       }
     },
     computed: {
       ...mapGetters({
-        numbers: 'getNumbers'
+        numbers: 'getNumbers',
+        complexity: 'getComplexity',
+        position: 'getPosition'
       })
     },
     methods: {
@@ -43,51 +69,90 @@
         let vm = this
         const pressed = value[value.length - 1]
 
-        this.input = pressed
-        change(pressed, vm)
+        this.input = pressed // input trim
+        valueChange(pressed, vm)
       }
     },
     mounted () {
       let vm = this
 
-      vm.generateTask()
+      vm.generateTask(vm.currentLevel, LEVELS.length - 1)
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
-        change(event.key, vm)
+        valueChange(event.key, vm)
       })
     }
   }
 
-  function change (value, vm) {
-    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete'].includes(value)) {
-      for (let i = 0; i < vm.numbers.length; i++) {
-        for (let j = 0; j < vm.numbers[i].length; j++) {
-          const elem = vm.numbers[i][j]
+  function valueChange (value, vm) {
+    const POSSIBLE_KEYS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete']
+    const DELETE_KEYS = ['Backspace', 'Delete']
 
-          if (elem.value && elem.correctValue && elem.value !== elem.correctValue) {
-            if (['Backspace', 'Delete'].includes(value)) {
-              elem.value = UNDEFINED
-              elem.class = 'question'
+    if (POSSIBLE_KEYS.includes(value)) {
+      const elem = vm.numbers[vm.position[0]][vm.position[1]]
 
-              return
-            }
+      if (elem.value && elem.correctValue && elem.value !== elem.correctValue) {
+        if (DELETE_KEYS.includes(value)) {
+          elem.value = UNDEFINED
+          elem.class = 'question'
 
-            const isTrueAnswer = value === elem.correctValue
-
-            elem.value = value
-            elem.class = isTrueAnswer ? 'correct' : 'incorrect'
-            vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
-
-            if (isTrueAnswer) {
-              setTimeout(function () {
-                vm.generateTask()
-              }, 2000)
-            }
-          }
+          return
         }
+
+        check(value, elem, vm)
       }
     }
+  }
+
+  function check (value, elem, vm) {
+    const isTrueAnswer = value === elem.correctValue
+
+    elem.value = value
+    elem.class = isTrueAnswer ? 'correct' : 'incorrect'
+    vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
+
+    if (isTrueAnswer) {
+      complete(vm)
+    } else {
+      // @todo wrong answer, place some help here
+
+      vm.errors++
+    }
+  }
+
+  function complete (vm) {
+    const timDiff = new Date().getTime() - vm.startTime
+
+    progressUp(timDiff, vm)
+
+    setTimeout(function () {
+      vm.errors = vm.errors > 1 && vm.complexity <= 1 ? 1 : 0 // extra task if too many errors on ordinary lask
+      vm.startTime = new Date().getTime()
+      vm.generateTask(vm.currentLevel, LEVELS.length - 1)
+    }, 2000)
+  }
+
+  function progressUp (timDiff, vm) {
+    const multiplier = (vm.errors > 0 ? 0
+        : (timDiff >= MAX_TIME ? 0
+            : (timDiff < BONUS_TIME ? 1 + Math.round(BONUS_TIME / timDiff) : 1)
+        )
+    )
+
+    vm.progress += Math.floor(multiplier * vm.complexity * 10) / 10
+
+    if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length - 1) {
+      vm.progress -= LEVELS[vm.currentLevel].maxProgress
+      vm.currentLevel++
+    } if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length) {
+      // max progress reached
+      vm.progress = LEVELS[vm.currentLevel].maxProgress
+    }
+
+    // @todo set to storage
+
+    console.log(vm.progress, vm.currentLevel, multiplier, vm.complexity, Math.floor(timDiff / BONUS_TIME), vm.errors)
   }
 
 </script>
