@@ -12,19 +12,19 @@ const state = {
 }
 
 const actions = {
-  generateTask ({commit}, currentLevel = 0, maxLevel = 0) {
-    commit('generate_task', [currentLevel, maxLevel])
+  generateTask ({commit}, params = {currentLevel: 0, maxLevel: 0}) {
+    commit('generate_task', params)
   }
 }
 
 const mutations = {
-  generate_task (state, [currentLevel, maxLevel]) {
-    let n = generateNumber(state, currentLevel, maxLevel)
+  generate_task (state, params) {
+    let n = generateNumber(state, params.currentLevel, params.maxLevel)
 
     // anti-[:::]
     while ((n.n1 === state.lastNumbers.n1 && n.n2 === state.lastNumbers.n2) ||
       (n.n1 === state.lastNumbers.n2 && n.n2 === state.lastNumbers.n1)) {
-      n = generateNumber(state, currentLevel, maxLevel)
+      n = generateNumber(state, params.currentLevel, params.maxLevel)
     }
 
     console.log(n.n1, 'x', n.n2)
@@ -110,8 +110,8 @@ const mutations = {
 
     state.numbers = NUMBERS
     state.complexity = (POSITION[0] < 2 ? 1 : POSITION[1] === 1 ? 0.7 : 0.8) *
-      (currentLevel > state.actualLevel ? 0.7
-        : (currentLevel < state.actualLevel ? 1.5 : 1)
+      (params.currentLevel > state.actualLevel ? 0.7
+        : (params.currentLevel < state.actualLevel ? 1.5 : 1)
       )
     state.position = POSITION
   }

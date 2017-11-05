@@ -21,7 +21,7 @@
   const UNDEFINED = '…'
   const BONUS_TIME = 6000
   const MAX_TIME = 15000
-
+  const COOLDOWN = 1000
   const LEVELS = [
     {
       maxProgress: 10
@@ -39,6 +39,7 @@
       maxProgress: 160
     }
   ]
+  const MAX_LEVELS = LEVELS.length - 1
 
   export default {
     components: {
@@ -76,7 +77,7 @@
     mounted () {
       let vm = this
 
-      vm.generateTask(vm.currentLevel, LEVELS.length - 1)
+      generateTask(vm)
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
@@ -129,8 +130,12 @@
     setTimeout(function () {
       vm.errors = vm.errors > 1 && vm.complexity <= 1 ? 1 : 0 // extra task if too many errors on ordinary lask
       vm.startTime = new Date().getTime()
-      vm.generateTask(vm.currentLevel, LEVELS.length - 1)
-    }, 2000)
+      generateTask(vm)
+    }, COOLDOWN)
+  }
+
+  function generateTask (vm) {
+    vm.generateTask({currentLevel: vm.currentLevel, maxLevel: MAX_LEVELS})
   }
 
   function progressUp (timDiff, vm) {
