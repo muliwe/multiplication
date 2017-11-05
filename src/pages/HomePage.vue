@@ -7,7 +7,16 @@
     </div>
     <div class="keyboard"><keyboard v-model="input" layouts="12345|67890" @input="changed" :maxlength="2"></keyboard></div>
     
-    <div id="progressBar"></div>
+    <header>
+        <div id="level">
+            <span class="achieved">0</span>
+            <span class="achieved">1</span>
+            <span class="unlocked">2</span>
+            <span class="locked">3</span>
+            <span class="locked">4</span>
+        </div>
+        <div id="progressBar"><div style="max-width:60%;min-width:60%;width:60%"></div></div>
+    </header>
     
     <audio ref="audioOk" src="./static/sounds/ok.wav"></audio>
     <audio ref="audioErr" src="./static/sounds/err.wav"></audio>
@@ -221,7 +230,7 @@ main div span.incorrect {
   color: #ff0000;
 }
 main div span.question {
-  color: #0000ff;
+  color: #007bff;
 }
 
 div.keyboard {
@@ -256,7 +265,7 @@ div.keyboard div {
       width: 90%;
     }
    main div span.question {
-      color: #0000ff;
+      color: #007bff;
     }
   div.keyboard {
     bottom: 0;
@@ -264,5 +273,61 @@ div.keyboard div {
   div.keyboard div {
     line-height: 0.3;
   }
+}
+header {
+    padding: 0px;
+    padding-top:1rem;
+    position: absolute;
+    top: 0;
+    font-size: 1rem;
+    width:80%
+}
+div#progressBar {
+    border: solid #007bff 2px;
+    border-radius: 15px;
+    width:100%;
+    padding: 0px;
+    height:2rem;
+}
+div#progressBar div {
+    color: white;
+    text-align:right;
+    background-color: #007bff;
+    overflow-x:hidden;
+    border:0;
+    border-radius: 0;
+}
+div#level {
+    font-size:2.0rem;
+    padding: 0.5rem;
+}
+div#level span {
+    border: solid #007bff 1px;
+    border-radius: 50%;
+    width: 2.5rem;
+    max-width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    color: #666666;
+    padding: 3px;
+    vertical-align:middle;
+}
+div#level span.achieved {
+    background-color: rgba(0, 123, 255, 0.76);
+    color: #c6e0fb;
+}
+div#level span.unlocked {
+    width: 3rem;
+    max-width: 3rem;
+    min-width: 3rem;
+    height: 3rem;
+    border: solid #007bff 2px;
+    font-size:2.4rem;
+    color: #007bff;
+}
+div#level span.locked {
+    background-color: #999999;
+    border: solid #999999 1px;
+    color: #dddddd;
 }
 </style>
