@@ -76,7 +76,7 @@
     mounted () {
       let vm = this
 
-      vm.generateTask(vm.currentLevel)
+      vm.generateTask(vm.currentLevel, LEVELS.length - 1)
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
@@ -127,9 +127,9 @@
     progressUp(timDiff, vm)
 
     setTimeout(function () {
-      vm.errors = vm.errors > 1 ? 1 : 0 // extra task if too many errors
+      vm.errors = vm.errors > 1 && vm.complexity <= 1 ? 1 : 0 // extra task if too many errors on ordinary lask
       vm.startTime = new Date().getTime()
-      vm.generateTask(vm.currentLevel)
+      vm.generateTask(vm.currentLevel, LEVELS.length - 1)
     }, 2000)
   }
 
@@ -152,7 +152,7 @@
 
     // @todo set to storage
 
-    console.log(vm.progress, vm.currentLevel, multiplier, vm.complexity, timDiff, vm.errors)
+    console.log(vm.progress, vm.currentLevel, multiplier, vm.complexity, Math.floor(timDiff / BONUS_TIME), vm.errors)
   }
 
 </script>
