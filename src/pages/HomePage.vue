@@ -1,23 +1,14 @@
 <template>
   <main>
+    <progress-bar :percent="currentProgressPercent"></progress-bar>
+
     <div>
     <echo v-for="number in numbers[0]" :key="number.id" :text="number.value" :as-class="number.class">
     </echo><span class=sign>×</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
     </echo><span class=sign>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
     </div>
     <div class="keyboard"><keyboard v-model="input" layouts="12345|67890" @input="changed" :maxlength="2"></keyboard></div>
-    
-    <header>
-        <div id="level">
-            <span class="achieved">0</span>
-            <span class="achieved">1</span>
-            <span class="unlocked">2</span>
-            <span class="locked">3</span>
-            <span class="locked">4</span>
-        </div>
-        <div id="progressBar"><div style="max-width:60%;min-width:60%;width:60%"></div></div>
-    </header>
-    
+
     <audio ref="audioOk" src="./static/sounds/ok.wav"></audio>
     <audio ref="audioErr" src="./static/sounds/err.wav"></audio>
     <!-- https://www.audioblocks.com/royalty-free-audio/cartoon-sound-effects https://freesound.org -->
@@ -28,6 +19,7 @@
   import { mapGetters, mapActions } from 'vuex'
   import Keyboard from 'vue-keyboard'
   import Echo from '@/components/Echo'
+  import ProgressBar from '@/components/ProgressBar'
 
   const UNDEFINED = '…'
   const BONUS_TIME = 6000
@@ -51,10 +43,13 @@
     }
   ]
 
+  const MAX_PROGRESS = LEVELS.reduce((a, b) => a + b.maxProgress, 0)
+
   export default {
     components: {
       Echo,
-      Keyboard
+      Keyboard,
+      ProgressBar
     },
     data: function () {
       return {
@@ -70,7 +65,19 @@
         numbers: 'getNumbers',
         complexity: 'getComplexity',
         position: 'getPosition'
-      })
+      }),
+      currentProgressPercent: function () {
+        const self = this
+
+        const currentProgress = (LEVELS.reduce((a, b, index) => a + (index < self.currentLevel ? b.maxProgress : 0), 0) +
+          self.progress)
+
+        const percent = Math.floor(currentProgress / MAX_PROGRESS * 100)
+
+        console.log(currentProgress, percent, '%')
+
+        return percent
+      }
     },
     methods: {
       ...mapActions([
@@ -273,64 +280,5 @@ div.keyboard div {
   div.keyboard div {
     line-height: 0.3;
   }
-}
-header {
-    padding: 0px;
-    padding-top:1rem;
-    position: absolute;
-    top: 0;
-    font-size: 1rem;
-    width:60%
-}
-div#progressBar {
-    border: solid #007bff 2px;
-    border-radius: 15px;
-    width:100%;
-    padding: 0px;
-    height:2rem;
-}
-div#progressBar div {
-    color: white;
-    text-align:right;
-    background-color: #007bff;
-    overflow-x:hidden;
-    border:0;
-    border-radius: 0;
-    padding: 2rem;
-}
-div#level {
-    font-size:2.0rem;
-    padding: 0.5rem;
-    margin-left: auto;
-    margin-right: auto;
-}
-div#level span {
-    border: solid #007bff 1px;
-    border-radius: 50%;
-    width: 2.5rem;
-    max-width: 2.5rem;
-    min-width: 2.5rem;
-    height: 2.5rem;
-    color: #666666;
-    padding: 3px;
-    vertical-align:middle;
-}
-div#level span.achieved {
-    background-color: rgba(0, 123, 255, 0.76);
-    color: #c6e0fb;
-}
-div#level span.unlocked {
-    width: 3rem;
-    max-width: 3rem;
-    min-width: 3rem;
-    height: 3rem;
-    border: solid #007bff 2px;
-    font-size:2.4rem;
-    color: #007bff;
-}
-div#level span.locked {
-    background-color: #999999;
-    border: solid #999999 1px;
-    color: #dddddd;
 }
 </style>
