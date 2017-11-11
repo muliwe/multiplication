@@ -1,5 +1,7 @@
 <template>
   <main>
+    <progress-bar :percent="currentProgressPercent"></progress-bar>
+
     <div>
     <echo v-for="number in numbers[0]" :key="number.id" :text="number.value" :as-class="number.class">
     </echo><span class=sign>×</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
@@ -17,6 +19,7 @@
   import { mapGetters, mapActions } from 'vuex'
   import Keyboard from 'vue-keyboard'
   import Echo from '@/components/Echo'
+  import ProgressBar from '@/components/ProgressBar'
 
   const UNDEFINED = '…'
   const BONUS_TIME = 6000
@@ -41,10 +44,13 @@
   ]
   const MAX_LEVELS = LEVELS.length - 1
 
+  const MAX_PROGRESS = LEVELS.reduce((a, b) => a + b.maxProgress, 0)
+
   export default {
     components: {
       Echo,
-      Keyboard
+      Keyboard,
+      ProgressBar
     },
     data: function () {
       return {
@@ -60,7 +66,19 @@
         numbers: 'getNumbers',
         complexity: 'getComplexity',
         position: 'getPosition'
-      })
+      }),
+      currentProgressPercent: function () {
+        const self = this
+
+        const currentProgress = (LEVELS.reduce((a, b, index) => a + (index < self.currentLevel ? b.maxProgress : 0), 0) +
+          self.progress)
+
+        const percent = Math.floor(currentProgress / MAX_PROGRESS * 100)
+
+        console.log(currentProgress, percent, '%')
+
+        return percent
+      }
     },
     methods: {
       ...mapActions([
@@ -191,7 +209,7 @@ main div {
   overflow: hidden;
   line-height:1;
 }
-main div:after {
+main > div:after {
   visibility: hidden;
   display: block;
   font-size: 0;
@@ -224,7 +242,7 @@ main div span.incorrect {
   color: #ff0000;
 }
 main div span.question {
-  color: #0000ff;
+  color: #007bff;
 }
 
 div.keyboard {
@@ -259,7 +277,7 @@ div.keyboard div {
       width: 90%;
     }
    main div span.question {
-      color: #0000ff;
+      color: #007bff;
     }
   div.keyboard {
     bottom: 0;
