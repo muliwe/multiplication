@@ -1,3 +1,9 @@
+# Release 0.4
+
+## New
+
+1. Current Level is stored in Local Storage
+
 # Release 0.3
 
 ## New
