@@ -52,11 +52,20 @@
       Keyboard,
       ProgressBar
     },
+    props: {
+      incrementLevel: {
+        type: Function,
+        required: true
+      },
+      currentLevel: {
+        type: Number,
+        required: true
+      }
+    },
     data: function () {
       return {
         input: '',
-        progress: 0, // @todo get from storage
-        currentLevel: 0, // @todo get from storage
+        progress: 0, // always start from the begining of current level
         startTime: new Date().getTime(),
         errors: 0
       }
@@ -148,7 +157,9 @@
     setTimeout(function () {
       vm.errors = vm.errors > 1 && vm.complexity <= 1 ? 1 : 0 // extra task if too many errors on ordinary lask
       vm.startTime = new Date().getTime()
+
       generateTask(vm)
+
     }, COOLDOWN)
   }
 
@@ -165,19 +176,24 @@
 
     vm.progress += Math.floor(multiplier * vm.complexity * 10) / 10
 
-    if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length - 1) {
-      vm.progress -= LEVELS[vm.currentLevel].maxProgress
-      vm.currentLevel++
-    } if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length) {
-      // max progress reached
-      vm.progress = LEVELS[vm.currentLevel].maxProgress
-    }
-
-    // @todo set to storage
+    levelUpIfNeeded(vm)
 
     console.log(vm.progress, vm.currentLevel, multiplier, vm.complexity, Math.floor(timDiff / BONUS_TIME), vm.errors)
   }
 
+  function levelUpIfNeeded (vm) {
+    if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length - 1) {
+      vm.progress -= LEVELS[vm.currentLevel].maxProgress
+      // next level reached
+      // @todo add some behavior here
+      vm.incrementLevel()
+      console.log('Bump!')
+    } if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length) {
+      // max progress reached
+      // @todo add come behavior here
+      vm.progress = LEVELS[vm.currentLevel].maxProgress
+    }
+  }
 </script>
 
 <style>

@@ -1,14 +1,24 @@
 <template>
 <div class="app">
   <div class="page">
-    <router-view></router-view>
+    <router-view :increment-level="incrementLevel" :current-level="currentLevel"></router-view>
   </div>
 </div>
 </template>
 
 <script>
   export default {
-    name: 'app'
+    name: 'app',
+    props: {
+      incrementLevel: {
+        type: Function,
+        required: true
+      },
+      currentLevel: {
+        type: Number,
+        required: true
+      }
+    }
   }
 </script>
 
