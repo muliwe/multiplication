@@ -187,7 +187,7 @@
       string += ',' + (getStats[i] || '0')
     }
 
-    window.location.replace('/#' + string + ',' + checksum(string))
+    window.location.replace('#' + string + ',' + checksum(string))
   }
 
   function valueChange (value, vm) {
