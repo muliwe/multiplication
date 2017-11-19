@@ -40,7 +40,7 @@ new Vue({
         values.push(val[i] || 0)
       }
 
-      this.$ls.set('stats', values)
+      this.$ls.set('stats', values.join(','))
     }
   },
   created: function () {
@@ -48,9 +48,9 @@ new Vue({
 
     self.currentLevel = Number(self.$ls.get('currentLevel', 0)) // 0 is default value
 
-    const stats = self.$ls.get('stats', [].fill.call({length: 10}, 0))
+    const stats = self.$ls.get('stats', '0,0,0,0,0,0,0,0,0,0').split(',')
     for (let i = 0; i < 10; i++) {
-      self.stats[i] = stats[i] || 0
+      self.stats[i] = stats[i]
     }
   },
   methods: {
