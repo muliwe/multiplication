@@ -111,8 +111,7 @@
     mounted () {
       let vm = this
 
-      readSessionData(vm)
-      generateTask(vm)
+      readSessionDataThenGenerateTask(vm)
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
@@ -121,8 +120,9 @@
     }
   }
 
-  function readSessionData (vm) {
+  function readSessionDataThenGenerateTask (vm) {
     if (!vm.session) {
+      generateTask(vm)
       return
     }
 
@@ -144,6 +144,7 @@
           currentLevel: level,
           stats
         })
+        generateTask(vm)
       }, 50)
     } else if (level === 0 && stats.length === 10 && actualCheckSum === checkSum) {
       // for testing purposes
@@ -157,9 +158,11 @@
           currentLevel: level,
           stats
         })
+        generateTask(vm)
       }, 50)
     } else {
       console.log('Checksum failed, session ignored')
+      generateTask(vm)
     }
   }
 
