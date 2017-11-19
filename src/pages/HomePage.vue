@@ -43,8 +43,8 @@
     }
   ]
   const MAX_LEVELS = LEVELS.length - 1
-
   const MAX_PROGRESS = LEVELS.reduce((a, b) => a + b.maxProgress, 0)
+  const CORRECTNESS_RATIO = 5 // one incorrect equals N correct to fix it
 
   export default {
     components: {
@@ -218,6 +218,10 @@
     vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
 
     if (isTrueAnswer) {
+      const getStats = vm.currentData().stats
+      const newValue = Math.floor((getStats[elem.correctValue] - 1 / CORRECTNESS_RATIO) * 10) / 10
+      getStats[elem.correctValue] = newValue > 0 ? newValue : 0
+
       complete(vm)
     } else {
       // @todo wrong answer, place some help here
