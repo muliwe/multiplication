@@ -12,19 +12,19 @@ const state = {
 }
 
 const actions = {
-  generateTask ({commit}, params = {currentLevel: 0, maxLevel: 0}) {
+  generateTask ({commit}, params = {currentLevel: 0, maxLevel: 0, stats: []}) {
     commit('generate_task', params)
   }
 }
 
 const mutations = {
   generate_task (state, params) {
-    let n = generateNumber(state, params.currentLevel, params.maxLevel)
+    let n = generateNumber(state, params.currentLevel, params.maxLevel, params.stats)
 
     // anti-[:::]
     while ((n.n1 === state.lastNumbers.n1 && n.n2 === state.lastNumbers.n2) ||
       (n.n1 === state.lastNumbers.n2 && n.n2 === state.lastNumbers.n1)) {
-      n = generateNumber(state, params.currentLevel, params.maxLevel)
+      n = generateNumber(state, params.currentLevel, params.maxLevel, params.stats)
     }
 
     console.log(n.n1, 'x', n.n2)
@@ -136,7 +136,7 @@ export default {
   getters
 }
 
-function generateNumber (state, currentLevel = 0, max = 0) {
+function generateNumber (state, currentLevel = 0, max = 0, stats = []) {
   const n = {}
 
   const randomLevel = lnRandomScaled(currentLevel || 0.4, // zero-issue fix
@@ -154,26 +154,26 @@ function generateNumber (state, currentLevel = 0, max = 0) {
   switch (randomLevel) {
     case 0:
       n.n1 = 1
-      n.n2 = randomInteger(2, 9)
+      n.n2 = randomIntegerWeighted(2, 9, stats)
       break
     case 1:
       n.n1 = 2
-      n.n2 = randomInteger(3, 9)
+      n.n2 = randomIntegerWeighted(3, 9, stats)
       break
     case 2:
-      n.n1 = randomInteger(2, 9)
+      n.n1 = randomIntegerWeighted(2, 9, stats)
       n.n2 = n.n1
       break
     case 3:
-      n.n1 = randomInteger(3, 5)
+      n.n1 = randomIntegerWeighted(3, 5, stats)
       do {
-        n.n2 = randomInteger(3, 9)
+        n.n2 = randomIntegerWeighted(3, 9, stats)
       } while (n.n1 === n.n2)
       break
     default:
-      n.n1 = randomInteger(6, 9)
+      n.n1 = randomIntegerWeighted(6, 9, stats)
       do {
-        n.n2 = randomInteger(6, 9)
+        n.n2 = randomIntegerWeighted(6, 9, stats)
       } while (n.n1 === n.n2)
   }
 
@@ -246,6 +246,20 @@ function randomInteger (min, max) {
   rand = Math.floor(rand)
 
   return rand
+}
+
+function randomIntegerWeighted (min, max, stats) {
+  let numbers = []
+
+  for (let i = min; i <= max; i++) {
+    for (let j = 1 + (stats[i] || -0.1); j > 0; j = j - 0.1) {
+      numbers.push(i)
+    }
+  }
+
+  // console.log(min, max, stats, numbers.length)
+
+  return numbers[randomInteger(0, numbers.length - 1)]
 }
 
 function doRandomSwap (n) {

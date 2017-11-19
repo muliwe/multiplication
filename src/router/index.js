@@ -10,6 +10,12 @@ export default new Router({
       path: '/',
       name: 'home',
       component: HomePage
+    },
+    {
+      path: '/:session',
+      name: 'session',
+      component: HomePage,
+      props: true
     }
   ]
 })
