@@ -218,6 +218,9 @@
       complete(vm)
     } else {
       // @todo wrong answer, place some help here
+      const getStats = vm.currentData().stats
+
+      getStats[elem.correctValue]++
 
       vm.errors++
     }
