@@ -1,7 +1,7 @@
 <template>
 <div class="app">
   <div class="page">
-    <router-view :increment-level="incrementLevel" :current-level="currentLevel"></router-view>
+    <router-view :increment-level="incrementLevel" :current-data="currentData" :set-data="setData"></router-view>
   </div>
 </div>
 </template>
@@ -14,8 +14,12 @@
         type: Function,
         required: true
       },
-      currentLevel: {
-        type: Number,
+      currentData: {
+        type: Function,
+        required: true
+      },
+      setData: {
+        type: Function,
         required: true
       }
     }
