@@ -243,7 +243,7 @@
   }
 
   function generateTask (vm) {
-    vm.generateTask({currentLevel: vm.currentData().currentLevel, maxLevel: MAX_LEVELS})
+    vm.generateTask({currentLevel: vm.currentData().currentLevel, maxLevel: MAX_LEVELS, stats: vm.currentData().stats})
   }
 
   function progressUp (timDiff, vm) {
