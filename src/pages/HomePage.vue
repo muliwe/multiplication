@@ -53,12 +53,19 @@
       ProgressBar
     },
     props: {
+      session: {
+        type: String
+      },
       incrementLevel: {
         type: Function,
         required: true
       },
-      currentLevel: {
-        type: Number,
+      currentData: {
+        type: Function,
+        required: true
+      },
+      setData: {
+        type: Function,
         required: true
       }
     },
@@ -79,8 +86,8 @@
       currentProgressPercent: function () {
         const self = this
 
-        const currentProgress = (LEVELS.reduce((a, b, index) => a + (index < self.currentLevel ? b.maxProgress : 0), 0) +
-          self.progress)
+        const currentProgress = (LEVELS.reduce((a, b, index) =>
+          a + (index < self.currentData().currentLevel ? b.maxProgress : 0), 0) + self.progress)
 
         const percent = Math.floor(currentProgress / MAX_PROGRESS * 100)
 
@@ -104,6 +111,7 @@
     mounted () {
       let vm = this
 
+      readSessionData(vm)
       generateTask(vm)
 
       window.addEventListener('keyup', function (event) {
@@ -111,6 +119,72 @@
         valueChange(event.key, vm)
       })
     }
+  }
+
+  function readSessionData (vm) {
+    if (!vm.session) {
+      return
+    }
+
+    const session = vm.session.split(',')
+    const stats = session.slice(0, -1).slice(1).map(el => Number(el))
+    const level = Number(session[0])
+    const checkSum = session.slice(-1)[0]
+    const actualCheckSum = checksum(level + ',' + stats)
+
+    if (level > 0 && level <= MAX_LEVELS && stats.length === 10 && actualCheckSum === checkSum) {
+      console.log('Session get: Level -> ' + level)
+
+      // if session start from the begin of saved level
+      vm.progress = 0
+
+      // wait for storage delay
+      setTimeout(function () {
+        vm.setData({
+          currentLevel: level,
+          stats
+        })
+      }, 50)
+    } else if (level === 0 && stats.length === 10 && actualCheckSum === checkSum) {
+      // for testing purposes
+      console.log('Session get: Level and stats dropped')
+
+      vm.progress = 0
+
+      // wait for storage delay
+      setTimeout(function () {
+        vm.setData({
+          currentLevel: level,
+          stats
+        })
+      }, 50)
+    } else {
+      console.log('Checksum failed, session ignored')
+    }
+  }
+
+  function checksum (s) {
+    const str = '' + JSON.stringify(s)
+
+    let chk = 0x12345678
+    const len = str.length
+
+    for (let i = 0; i < len; i++) {
+      chk += (str.charCodeAt(i) * (i + 1))
+    }
+
+    return (chk & 0xffffffff).toString(16)
+  }
+
+  function rewriteLocation (vm) {
+    let string = '' + vm.currentData().currentLevel
+    const getStats = vm.currentData().stats
+
+    for (let i = 0; i < 10; i++) {
+      string += ',' + (getStats[i] || '0')
+    }
+
+    window.location.replace('/#' + string + ',' + checksum(string))
   }
 
   function valueChange (value, vm) {
@@ -159,12 +233,11 @@
       vm.startTime = new Date().getTime()
 
       generateTask(vm)
-
     }, COOLDOWN)
   }
 
   function generateTask (vm) {
-    vm.generateTask({currentLevel: vm.currentLevel, maxLevel: MAX_LEVELS})
+    vm.generateTask({currentLevel: vm.currentData().currentLevel, maxLevel: MAX_LEVELS})
   }
 
   function progressUp (timDiff, vm) {
@@ -178,20 +251,26 @@
 
     levelUpIfNeeded(vm)
 
-    console.log(vm.progress, vm.currentLevel, multiplier, vm.complexity, Math.floor(timDiff / BONUS_TIME), vm.errors)
+    console.log(vm.progress, vm.currentData().currentLevel, multiplier, vm.complexity,
+      Math.floor(timDiff / BONUS_TIME), vm.errors)
   }
 
   function levelUpIfNeeded (vm) {
-    if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length - 1) {
-      vm.progress -= LEVELS[vm.currentLevel].maxProgress
+    const currentLevel = vm.currentData().currentLevel
+    const maxProgress = LEVELS[currentLevel].maxProgress
+
+    if (vm.progress > maxProgress && currentLevel < LEVELS.length - 1) {
+      vm.progress -= maxProgress
       // next level reached
       // @todo add some behavior here
       vm.incrementLevel()
+      rewriteLocation(vm)
       console.log('Bump!')
-    } if (vm.progress > LEVELS[vm.currentLevel].maxProgress && vm.currentLevel < LEVELS.length) {
+    } if (vm.progress > maxProgress && currentLevel < LEVELS.length) {
       // max progress reached
       // @todo add come behavior here
-      vm.progress = LEVELS[vm.currentLevel].maxProgress
+      vm.progress = maxProgress
+      rewriteLocation(vm)
     }
   }
 </script>
