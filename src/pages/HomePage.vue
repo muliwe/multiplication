@@ -25,6 +25,7 @@
   const BONUS_TIME = 6000
   const MAX_TIME = 15000
   const COOLDOWN = 1000
+  const COOLDOWN_REVERT = 2000
   const LEVELS = [
     {
       maxProgress: 10
@@ -74,6 +75,10 @@
         input: '',
         progress: 0, // always start from the begining of current level
         startTime: new Date().getTime(),
+        errorsInSequence: 0,
+        errorState: false,
+        started: new Date(),
+        tries: 0,
         errors: 0
       }
     },
@@ -105,7 +110,7 @@
         const pressed = value[value.length - 1]
 
         this.input = pressed // input trim
-        valueChange(pressed, vm)
+        valueChange(vm, pressed)
       }
     },
     mounted () {
@@ -115,7 +120,7 @@
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
-        valueChange(event.key, vm)
+        valueChange(vm, event.key)
       })
     }
   }
@@ -190,7 +195,7 @@
     window.location.replace('#' + string + ',' + checksum(string))
   }
 
-  function valueChange (value, vm) {
+  function valueChange (vm, value) {
     const POSSIBLE_KEYS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Delete']
     const DELETE_KEYS = ['Backspace', 'Delete']
 
@@ -205,12 +210,12 @@
           return
         }
 
-        check(value, elem, vm)
+        check(vm, value, elem)
       }
     }
   }
 
-  function check (value, elem, vm) {
+  function check (vm, value, elem) {
     const isTrueAnswer = value === elem.correctValue
 
     elem.value = value
@@ -218,40 +223,66 @@
     vm.$refs[isTrueAnswer ? 'audioOk' : 'audioErr'].play()
 
     if (isTrueAnswer) {
-      const getStats = vm.currentData().stats
-      const newValue = Math.floor((getStats[elem.correctValue] - 1 / CORRECTNESS_RATIO) * 10) / 10
-      getStats[elem.correctValue] = newValue > 0 ? newValue : 0
-
-      complete(vm)
+      complete(vm, elem)
     } else {
-      // @todo wrong answer, place some help here
-      const getStats = vm.currentData().stats
-
-      getStats[elem.correctValue]++
-
-      vm.errors++
+      error(vm, elem)
     }
   }
 
-  function complete (vm) {
+  function complete (vm, elem) {
+    const getStats = vm.currentData().stats
+    const newValue = Math.floor((getStats[elem.correctValue] - 1 / CORRECTNESS_RATIO) * 10) / 10
     const timDiff = new Date().getTime() - vm.startTime
 
-    progressUp(timDiff, vm)
+    getStats[elem.correctValue] = newValue > 0 ? newValue : 0
+
+    vm.tries++
+    vm.errorState = false
+
+    progressUp(vm, timDiff)
 
     setTimeout(function () {
-      vm.errors = vm.errors > 1 && vm.complexity <= 1 ? 1 : 0 // extra task if too many errors on ordinary lask
+      // extra task if too many errors on ordinary lask
+      vm.errorsInSequence = vm.errorsInSequence > 1 && vm.complexity <= 1 ? 1 : 0
       vm.startTime = new Date().getTime()
 
       generateTask(vm)
     }, COOLDOWN)
   }
 
+  function error (vm, elem) {
+    // @todo place some help behavior here
+    const getStats = vm.currentData().stats
+
+    getStats[elem.correctValue]++
+
+    revertLater(vm, elem)
+
+    vm.tries++
+    vm.errors++
+    vm.errorsInSequence++
+  }
+
+  function revertLater (vm, elem) {
+    vm.errorState = true
+
+    setTimeout(function () {
+      if (vm.errorState) {
+        elem.value = UNDEFINED
+        elem.class = 'question'
+        vm.errorState = false
+      }
+    }, COOLDOWN_REVERT)
+  }
+
   function generateTask (vm) {
+    console.log('tries', vm.tries, 'errors', vm.errors, Math.round(vm.errors / (vm.tries || 1) * 100) + '%')
     vm.generateTask({currentLevel: vm.currentData().currentLevel, maxLevel: MAX_LEVELS, stats: vm.currentData().stats})
   }
 
-  function progressUp (timDiff, vm) {
-    const multiplier = (vm.errors > 0 ? 0
+  function progressUp (vm, timDiff) {
+    // zero progress after an error
+    const multiplier = (vm.errorsInSequence > 0 ? 0
         : (timDiff >= MAX_TIME ? 0
             : (timDiff < BONUS_TIME ? 1 + Math.round(BONUS_TIME / timDiff) : 1)
         )
@@ -262,7 +293,7 @@
     levelUpIfNeeded(vm)
 
     console.log(vm.progress, vm.currentData().currentLevel, multiplier, vm.complexity,
-      Math.floor(timDiff / BONUS_TIME), vm.errors)
+      Math.floor(timDiff / BONUS_TIME), vm.errorsInSequence)
   }
 
   function levelUpIfNeeded (vm) {
