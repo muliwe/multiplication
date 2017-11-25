@@ -276,7 +276,7 @@
   }
 
   function generateTask (vm) {
-    console.log('tries', vm.tries, 'errors', vm.errors, Math.round(vm.errors / vm.tries * 100) + '%')
+    console.log('tries', vm.tries, 'errors', vm.errors, Math.round(vm.errors / (vm.tries || 1) * 100) + '%')
     vm.generateTask({currentLevel: vm.currentData().currentLevel, maxLevel: MAX_LEVELS, stats: vm.currentData().stats})
   }
 
