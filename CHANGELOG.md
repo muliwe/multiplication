@@ -1,3 +1,20 @@
+# Release 0.5.2
+
+## New
+
+1. Tries stats collected
+1. Revert later on error behavior
+
+## Fix
+
+1. Random average deviation greatly increased for last level
+
+# Release 0.5.1
+
+## Fix
+
+1. URL rewrite fix
+
 # Release 0.5
 
 ## New
