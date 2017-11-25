@@ -19,6 +19,14 @@ const actions = {
 
 const mutations = {
   generate_task (state, params) {
+    /*
+    const stats = '0,0,0,0,0'.split(',').map(num => Number(num))
+    for (let i = 0; i < 100; i++) {
+      generateNumber(state, 4, params.maxLevel, '0,0,0,0,0,0,0,0,0,0'.split(',').map(num => Number(num)))
+      stats[state.actualLevel]++
+    }
+    console.log(stats)
+    */
     let n = generateNumber(state, params.currentLevel, params.maxLevel, params.stats)
 
     // anti-[:::]
@@ -222,7 +230,7 @@ function normalRandomInRange (min, max) {
 }
 
 function lnRandomScaled (gmean, min, max) {
-  const gstddev = 100
+  const gstddev = 500
 
   let r, val
   let maxIterations = 10
