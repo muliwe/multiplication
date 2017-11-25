@@ -25,6 +25,7 @@
   const BONUS_TIME = 6000
   const MAX_TIME = 15000
   const COOLDOWN = 1000
+  const COOLDOWN_REVERT = 2000
   const LEVELS = [
     {
       maxProgress: 10
@@ -74,7 +75,8 @@
         input: '',
         progress: 0, // always start from the begining of current level
         startTime: new Date().getTime(),
-        errors: 0
+        errors: 0,
+        errorState: false
       }
     },
     computed: {
@@ -229,12 +231,28 @@
 
       getStats[elem.correctValue]++
 
+      revertLater(vm, elem)
+
       vm.errors++
     }
   }
 
+  function revertLater (vm, elem) {
+    vm.errorState = true
+
+    setTimeout(function () {
+      if (vm.errorState) {
+        elem.value = UNDEFINED
+        elem.class = 'question'
+        vm.errorState = false
+      }
+    }, COOLDOWN_REVERT)
+  }
+
   function complete (vm) {
     const timDiff = new Date().getTime() - vm.startTime
+
+    vm.errorState = false
 
     progressUp(timDiff, vm)
 
