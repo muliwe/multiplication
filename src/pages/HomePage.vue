@@ -92,7 +92,7 @@
         startTime: new Date().getTime(),
         errorsInSequence: 0,
         errorState: false,
-        started: new Date(),
+        started: new Date().getTime(),
         tries: 0,
         errors: 0,
         modalText: '',
@@ -335,7 +335,7 @@
       if (!vm.ended) {
         vm.ended = true
         vm.modalText = 'Пройти всю программу обучения за ' +
-          Math.round((new Date().getTime() - vm.startTime) / 1000 / 60 + 1) +
+          Math.round((new Date().getTime() - vm.started) / 1000 / 60 + 1) +
             ' мин. это прекрасный результат!'
         vm.showModal()
       }
