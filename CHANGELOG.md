@@ -1,3 +1,9 @@
+# Release 0.6.1
+
+## Fix
+
+1. Date workaround fix
+
 # Release 0.6
 
 ## New
