@@ -1,3 +1,9 @@
+# Release 0.6.2
+
+## Fix
+
+1. Several mobile layout fixes
+
 # Release 0.6.1
 
 ## Fix
