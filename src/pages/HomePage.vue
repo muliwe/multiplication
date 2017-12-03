@@ -88,7 +88,7 @@
     data: function () {
       return {
         input: '',
-        progress: 0, // always start from the begining of current level
+        progress: 250, // always start from the begining of current level
         startTime: new Date().getTime(),
         errorsInSequence: 0,
         errorState: false,
@@ -140,6 +140,8 @@
       let vm = this
 
       readSessionDataThenGenerateTask(vm)
+
+      window.scrollTo(0, document.body.scrollHeight)
 
       window.addEventListener('keyup', function (event) {
         // console.log(event)
@@ -346,6 +348,11 @@
 </script>
 
 <style>
+* {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+    -webkit-focus-ring-color: rgba(255, 255, 255, 0) !important;
+    outline: none !important;
+}
 html {
   font-size:2vw;
 }
@@ -444,14 +451,22 @@ div.keyboard div {
   margin-right: auto;
   font-size: 4rem;
 }
-
+.vue-keyboard-key:hover {
+    background: #EEE !important;
+}
+div.modal {
+    padding-left:0px !important;
+}
 @media screen and (max-width: 480px) and (orientation: portrait) {
     main div {
       width: 100%;
-      padding:0;
+      padding: 0;
     }
     div.keyboard {
       bottom: 14rem;
+    }
+    .modal button {
+        line-height: 5vh;
     }
 }
 @media screen and (max-width: 720px) and (orientation: landscape) {
@@ -462,10 +477,13 @@ div.keyboard div {
       color: #007bff;
     }
   div.keyboard {
-    bottom: 0;
+    bottom: -7vh;
   }
   div.keyboard div {
     line-height: 0.3;
   }
+    .modal button {
+        line-height: 5vh;
+    }
 }
 </style>

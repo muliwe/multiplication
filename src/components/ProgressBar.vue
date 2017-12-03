@@ -48,7 +48,8 @@
     border-radius: 15px;
     width:100%;
     padding: 0px;
-    height:2rem;
+    height:1.5rem;
+    margin-top:6vh;
   }
   div#progressBar div {
     color: white;
@@ -96,5 +97,18 @@
     background-color: #999999;
     border: solid #999999 1px;
     color: #dddddd;
+  }
+
+  @media screen and (max-width: 480px) and (orientation: portrait) {
+    div#progressBar {
+      height:5vh;
+      margin-top:12vh;
+    }
+  }
+  @media screen and (max-width: 720px) and (orientation: landscape) {
+    div#progressBar {
+      height:7vh;
+      margin-top:12vh;
+    }
   }
 </style>
