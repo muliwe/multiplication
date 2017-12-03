@@ -438,6 +438,7 @@ div.keyboard {
   position: absolute;
   bottom: 0.5rem;
   width: 100%;
+  z-index: 10;
 }
 div.keyboard div {
   line-height: 0.5;
