@@ -452,38 +452,36 @@ div.keyboard div {
   font-size: 4rem;
 }
 .vue-keyboard-key:hover {
-    background: #EEE !important;
+  background: #EEE !important;
 }
-div.modal {
-    padding-left:0px !important;
-}
+
 @media screen and (max-width: 480px) and (orientation: portrait) {
-    main div {
-      width: 100%;
-      padding: 0;
-    }
-    div.keyboard {
-      bottom: 14rem;
-    }
-    .modal button {
-        line-height: 5vh;
-    }
+  main div {
+    width: 100%;
+    padding: 0;
+  }
+  div.keyboard {
+    bottom: 14rem;
+  }
+  .modal button {
+    line-height: 5vh;
+  }
 }
 @media screen and (max-width: 720px) and (orientation: landscape) {
-    main div {
-      width: 90%;
-    }
-   main div span.question {
-      color: #007bff;
-    }
+  main div span.question {
+    color: #007bff;
+  }
+  main > div {
+    padding: 6vw;
+  }
   div.keyboard {
     bottom: -7vh;
   }
   div.keyboard div {
     line-height: 0.3;
   }
-    .modal button {
-        line-height: 5vh;
-    }
+  .modal button {
+    line-height: 5vh;
+  }
 }
 </style>
