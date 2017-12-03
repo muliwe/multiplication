@@ -88,7 +88,7 @@
     data: function () {
       return {
         input: '',
-        progress: 250, // always start from the begining of current level
+        progress: 0, // always start from the begining of current level
         startTime: new Date().getTime(),
         errorsInSequence: 0,
         errorState: false,
