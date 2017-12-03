@@ -1,3 +1,9 @@
+# Release 0.6
+
+## New
+
+1. New level and end progress modal alerts
+
 # Release 0.5.2
 
 ## New
