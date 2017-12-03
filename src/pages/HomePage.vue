@@ -2,12 +2,19 @@
   <main>
     <progress-bar :percent="currentProgressPercent"></progress-bar>
 
-    <div>
+    <div class="echo">
     <echo v-for="number in numbers[0]" :key="number.id" :text="number.value" :as-class="number.class">
     </echo><span class=sign>×</span><echo v-for="number in numbers[1]" :key="number.id" :text="number.value" :as-class="number.class">
     </echo><span class=sign>=</span><echo v-for="number in numbers[2]" :key="number.id" :text="number.value" :as-class="number.class"></echo>
     </div>
     <div class="keyboard"><keyboard v-model="input" layouts="12345|67890" @input="changed" :maxlength="2"></keyboard></div>
+
+    <b-modal ref="myModalRef" hide-footer hide-header centered title="" class="clear">
+      <div class="d-block text-center">
+        <h3>{{modalText}}</h3>
+      </div>
+      <b-btn class="mt-3" variant="outline-secondary" block @click="hideModal">Продолжить</b-btn>
+    </b-modal>
 
     <audio ref="audioOk" src="./static/sounds/ok.wav"></audio>
     <audio ref="audioErr" src="./static/sounds/err.wav"></audio>
@@ -20,6 +27,9 @@
   import Keyboard from 'vue-keyboard'
   import Echo from '@/components/Echo'
   import ProgressBar from '@/components/ProgressBar'
+  import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
+  import bBtn from 'bootstrap-vue/es/components/button/button'
+  import bModal from 'bootstrap-vue/es/components/modal/modal'
 
   const UNDEFINED = '…'
   const BONUS_TIME = 6000
@@ -51,7 +61,12 @@
     components: {
       Echo,
       Keyboard,
-      ProgressBar
+      ProgressBar,
+      'b-modal': bModal,
+      'b-btn': bBtn
+    },
+    directives: {
+      'b-modal': bModalDirective
     },
     props: {
       session: {
@@ -79,7 +94,9 @@
         errorState: false,
         started: new Date(),
         tries: 0,
-        errors: 0
+        errors: 0,
+        modalText: '',
+        ended: false
       }
     },
     computed: {
@@ -111,6 +128,12 @@
 
         this.input = pressed // input trim
         valueChange(vm, pressed)
+      },
+      showModal () {
+        this.$refs.myModalRef.show()
+      },
+      hideModal () {
+        this.$refs.myModalRef.hide()
       }
     },
     mounted () {
@@ -303,13 +326,19 @@
     if (vm.progress > maxProgress && currentLevel < LEVELS.length - 1) {
       vm.progress -= maxProgress
       // next level reached
-      // @todo add some behavior here
+      vm.modalText = 'Следующий уровень! Поздравляем!'
+      vm.showModal()
       vm.incrementLevel()
       rewriteLocation(vm)
-      console.log('Bump!')
     } if (vm.progress > maxProgress && currentLevel < LEVELS.length) {
       // max progress reached
-      // @todo add come behavior here
+      if (!vm.ended) {
+        vm.ended = true
+        vm.modalText = 'Пройти всю программу обучения за ' +
+          Math.round((new Date().getTime() - vm.startTime) / 1000 / 60 + 1) +
+            ' мин. это прекрасный результат!'
+        vm.showModal()
+      }
       vm.progress = maxProgress
       rewriteLocation(vm)
     }
@@ -338,12 +367,30 @@ main div {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   font-family: "Roboto", Arial, sans-serif;
   font-size: 8rem;
-  width: 80%;
   padding: 20px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  line-height:1;
+  line-height: 1;
+}
+main > div {
+  width: 80%;
+}
+main .clear {
+  display: block;
+  position: absolute;
+}
+main .clear .modal-dialog {
+  max-width: 700px;
+}
+main .clear div {
+  white-space: normal;
+}
+.modal-dialog header {
+  width: 90%;
+}
+.modal-header {
+  border-bottom: 0;
 }
 main > div:after {
   visibility: hidden;
@@ -380,7 +427,6 @@ main div span.incorrect {
 main div span.question {
   color: #007bff;
 }
-
 div.keyboard {
   position: absolute;
   bottom: 0.5rem;
