@@ -44,7 +44,7 @@
     width:60%
   }
   div#progressBar {
-    border: solid #007bff 2px;
+    border: solid #00abff 2px;
     border-radius: 15px;
     width:100%;
     padding: 0px;
@@ -54,7 +54,7 @@
   div#progressBar div {
     color: white;
     text-align:right;
-    background-color: #007bff;
+    background-color: #00abff;
     overflow-x:hidden;
     border:0;
     border-radius: 0;
