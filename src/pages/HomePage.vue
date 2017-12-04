@@ -469,6 +469,20 @@ div.keyboard div {
   }
 }
 @media screen and (max-width: 720px) and (orientation: landscape) {
+  main div {
+    font-size: 6rem;
+    line-height: 2;
+  }
+  main div span {
+    width: 4rem;
+    max-width: 4rem;
+    min-width: 4rem;
+  }
+  main div span.sign {
+    width: 5.5rem;
+    max-width: 5.5rem;
+    min-width: 5.5rem;
+  }
   main div span.question {
     color: #007bff;
   }
