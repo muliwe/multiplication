@@ -432,7 +432,7 @@ main div span.incorrect {
   color: #ff0000;
 }
 main div span.question {
-  color: #007bff;
+  color: #00abff;
 }
 div.keyboard {
   position: absolute;
@@ -446,6 +446,11 @@ div.keyboard div {
 .vue-keyboard-key {
   font-size: 2rem !important;
   padding: 1rem !important;
+  background: #00abff !important;
+  color: #fff !important;
+  border: solid #00abff 2px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
 }
 .vue-keyboard-row {
   margin-left: auto;
@@ -453,7 +458,10 @@ div.keyboard div {
   font-size: 4rem;
 }
 .vue-keyboard-key:hover {
-  background: #EEE !important;
+  background: #009ae6 !important;
+}
+.vue-keyboard-key:active, .vue-keyboard-key:focus {
+  background: #00abff !important;
 }
 
 @media screen and (max-width: 480px) and (orientation: portrait) {
@@ -469,6 +477,20 @@ div.keyboard div {
   }
 }
 @media screen and (max-width: 720px) and (orientation: landscape) {
+  main div {
+    font-size: 6rem;
+    line-height: 2;
+  }
+  main div span {
+    width: 4rem;
+    max-width: 4rem;
+    min-width: 4rem;
+  }
+  main div span.sign {
+    width: 5.5rem;
+    max-width: 5.5rem;
+    min-width: 5.5rem;
+  }
   main div span.question {
     color: #007bff;
   }
