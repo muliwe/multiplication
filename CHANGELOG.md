@@ -1,3 +1,15 @@
+# Release 0.7
+
+## New
+
+1. Addition trainer
+
+## Fix
+
+1. Stats storage
+1. Icon fixes
+1. Redundant code removal
+
 # Release 0.6.2-6
 
 ## Fix
