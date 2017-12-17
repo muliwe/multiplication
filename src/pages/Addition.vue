@@ -57,9 +57,6 @@
       },
       {
         maxProgress: 80
-      },
-      {
-        maxProgress: 160
       }
     ]
   }

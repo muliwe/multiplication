@@ -103,7 +103,8 @@ const mutations = {
       ]
     ]
     const POSITION = [Math.floor(Math.random() * NUMBERS.length), 1]
-    POSITION[1] = (POSITION[0] === NUMBERS.length - 1 && n.n31 ? Math.floor(Math.random() * 2) : 1)
+    POSITION[1] = (POSITION[0] === NUMBERS.length - 1 && n.n31 && params.currentApp !== 'addition' // too easy
+      ? Math.floor(Math.random() * 2) : 1)
 
     // console.log(POSITION)
 
@@ -159,30 +160,56 @@ function generateNumber (state, currentApp = '', currentLevel = 0, max = 0, stat
   }
   */
 
-  switch (randomLevel) {
-    case 0:
-      n.n1 = 1
-      n.n2 = randomIntegerWeighted(2, 9, stats)
+  switch (currentApp) {
+    case 'addition':
+      switch (randomLevel) {
+        case 0:
+          n.n1 = 1
+          n.n2 = randomIntegerWeighted(1, 8, stats)
+          break
+        case 1:
+          n.n1 = randomIntegerWeighted(2, 8, stats)
+          do {
+            n.n2 = randomIntegerWeighted(2, 8, stats)
+          } while (n.n1 + n.n2 >= 10)
+          break
+        case 2:
+          n.n1 = randomIntegerWeighted(2, 9, stats)
+          n.n2 = 10 - n.n1
+          break
+        default:
+          n.n1 = randomIntegerWeighted(2, 9, stats)
+          do {
+            n.n2 = randomIntegerWeighted(2, 9, stats)
+          } while (n.n1 + n.n2 <= 10)
+      }
       break
-    case 1:
-      n.n1 = 2
-      n.n2 = randomIntegerWeighted(3, 9, stats)
-      break
-    case 2:
-      n.n1 = randomIntegerWeighted(2, 9, stats)
-      n.n2 = n.n1
-      break
-    case 3:
-      n.n1 = randomIntegerWeighted(3, 5, stats)
-      do {
-        n.n2 = randomIntegerWeighted(3, 9, stats)
-      } while (n.n1 === n.n2)
-      break
-    default:
-      n.n1 = randomIntegerWeighted(6, 9, stats)
-      do {
-        n.n2 = randomIntegerWeighted(6, 9, stats)
-      } while (n.n1 === n.n2)
+    default: // multiplication
+      switch (randomLevel) {
+        case 0:
+          n.n1 = 1
+          n.n2 = randomIntegerWeighted(2, 9, stats)
+          break
+        case 1:
+          n.n1 = 2
+          n.n2 = randomIntegerWeighted(3, 9, stats)
+          break
+        case 2:
+          n.n1 = randomIntegerWeighted(2, 9, stats)
+          n.n2 = n.n1
+          break
+        case 3:
+          n.n1 = randomIntegerWeighted(3, 5, stats)
+          do {
+            n.n2 = randomIntegerWeighted(3, 9, stats)
+          } while (n.n1 === n.n2)
+          break
+        default:
+          n.n1 = randomIntegerWeighted(6, 9, stats)
+          do {
+            n.n2 = randomIntegerWeighted(6, 9, stats)
+          } while (n.n1 === n.n2)
+      }
   }
 
   doRandomSwap(n)
