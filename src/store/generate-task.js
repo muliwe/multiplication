@@ -35,7 +35,7 @@ const mutations = {
       n = generateNumber(state, params.currentApp, params.currentLevel, params.maxLevel, params.stats)
     }
 
-    console.log(n.n1, 'x', n.n2)
+    console.log(n.n1, (params.currentApp === 'addition' ? '+' : 'x'), n.n2)
 
     state.lastNumbers.n1 = n.n1
     state.lastNumbers.n2 = n.n2
@@ -187,8 +187,15 @@ function generateNumber (state, currentApp = '', currentLevel = 0, max = 0, stat
 
   doRandomSwap(n)
 
-  n.n31 = Math.floor(n.n1 * n.n2 / 10) || ''
-  n.n32 = Math.floor(n.n1 * n.n2 - n.n31 * 10) || '0'
+  switch (currentApp) {
+    case 'addition':
+      n.n31 = Math.floor((n.n1 + n.n2) / 10) || ''
+      n.n32 = Math.floor(n.n1 + n.n2 - n.n31 * 10) || '0'
+      break
+    default: // multiplication
+      n.n31 = Math.floor(n.n1 * n.n2 / 10) || ''
+      n.n32 = Math.floor(n.n1 * n.n2 - n.n31 * 10) || '0'
+  }
 
   return n
 }

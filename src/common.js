@@ -4,6 +4,12 @@ export default {
   currentProgressPercent
 }
 
+function setCurrentApp (vm) {
+  vm.setData({
+    currentApp: vm.CONFIG.APP
+  })
+}
+
 function currentProgressPercent (vm) {
   const currentProgress = (vm.CONFIG.LEVELS.reduce((a, b, index) =>
     a + (index < vm.currentData().currentLevel ? b.maxProgress : 0), 0) + vm.progress)
@@ -16,6 +22,8 @@ function currentProgressPercent (vm) {
 }
 
 function readSessionDataThenGenerateTask (vm) {
+  setCurrentApp(vm)
+
   if (!vm.session) {
     generateTask(vm)
     return
