@@ -1,5 +1,6 @@
 <template>
   <main>
+    <navigation :current-app-url="CONFIG.PATH"></navigation>
     <progress-bar :percent="currentProgressPercent"></progress-bar>
 
     <div class="echo">
@@ -26,6 +27,7 @@
   import { mapGetters, mapActions } from 'vuex'
   import Keyboard from 'vue-keyboard'
   import Echo from '@/components/Echo'
+  import Navigation from '@/components/Navigation'
   import ProgressBar from '@/components/ProgressBar'
   import common from '../common'
   import bModalDirective from 'bootstrap-vue/es/directives/modal/modal'
@@ -68,6 +70,7 @@
     components: {
       Echo,
       Keyboard,
+      Navigation,
       ProgressBar,
       'b-modal': bModal,
       'b-btn': bBtn

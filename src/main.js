@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import VueLocalStorage from 'vue-localstorage'
+import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 import store from './store/index'
@@ -15,6 +16,8 @@ Vue.use(VueLocalStorage, {
   name: 'ls',
   createComputed: true // created computed members from your variable declarations
 })
+
+Vue.use(BootstrapVue)
 
 /* eslint-disable no-new */
 new Vue({
