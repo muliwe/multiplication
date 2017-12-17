@@ -37,7 +37,17 @@ new Vue({
       reload(self)
     },
     currentLevel: function (val) {
-      this.$ls.set(this.currentApp + 'currentLevel', val)
+      const self = this
+
+      self.$ls.set(this.currentApp + 'currentLevel', val)
+
+      const values = []
+
+      for (let i = 0; i < 10; i++) {
+        values.push(self.stats[i] || 0)
+      }
+
+      this.$ls.set(this.currentApp + 'stats', values.join(','))
     },
     stats: function (val) {
       const values = []
@@ -76,10 +86,14 @@ new Vue({
 })
 
 function reload (vm) {
+  console.log(vm.currentApp, 'currentLevel', vm.$ls.get(vm.currentApp + 'currentLevel', 0))
+
   vm.currentLevel = Number(vm.$ls.get(vm.currentApp + 'currentLevel', 0)) // 0 is default value
 
   const stats = vm.$ls.get(vm.currentApp + 'stats', '0,0,0,0,0,0,0,0,0,0').split(',')
   for (let i = 0; i < 10; i++) {
     vm.stats[i] = stats[i]
   }
+
+  console.log(vm.currentApp, 'stats', vm.$ls.get(vm.currentApp + 'stats', '0,0,0,0,0,0,0,0,0,0').split(','))
 }
