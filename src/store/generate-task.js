@@ -12,7 +12,7 @@ const state = {
 }
 
 const actions = {
-  generateTask ({commit}, params = {currentLevel: 0, maxLevel: 0, stats: []}) {
+  generateTask ({commit}, params = {currentApp: '', currentLevel: 0, maxLevel: 0, stats: []}) {
     commit('generate_task', params)
   }
 }
@@ -27,12 +27,12 @@ const mutations = {
     }
     console.log(stats)
     */
-    let n = generateNumber(state, params.currentLevel, params.maxLevel, params.stats)
+    let n = generateNumber(state, params.currentApp, params.currentLevel, params.maxLevel, params.stats)
 
     // anti-[:::]
     while ((n.n1 === state.lastNumbers.n1 && n.n2 === state.lastNumbers.n2) ||
       (n.n1 === state.lastNumbers.n2 && n.n2 === state.lastNumbers.n1)) {
-      n = generateNumber(state, params.currentLevel, params.maxLevel, params.stats)
+      n = generateNumber(state, params.currentApp, params.currentLevel, params.maxLevel, params.stats)
     }
 
     console.log(n.n1, 'x', n.n2)
@@ -144,12 +144,12 @@ export default {
   getters
 }
 
-function generateNumber (state, currentLevel = 0, max = 0, stats = []) {
+function generateNumber (state, currentApp = '', currentLevel = 0, max = 0, stats = []) {
   const n = {}
 
   const randomLevel = lnRandomScaled(currentLevel || 0.4, // zero-issue fix
     0, max)
-  console.log(currentLevel, '->', randomLevel)
+  console.log(currentApp || 'multiplication', currentLevel, '->', randomLevel)
   state.actualLevel = randomLevel
 
   /*

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HomePage from '@/pages/HomePage'
+import Multiplication from '@/pages/Multiplication'
 
 Vue.use(Router)
 
@@ -9,12 +9,23 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: HomePage
+      component: Multiplication
     },
     {
       path: '/:session',
-      name: 'session',
-      component: HomePage,
+      name: 'home-session',
+      component: Multiplication,
+      props: true
+    },
+    {
+      path: '/multiplication/',
+      name: 'multiplication',
+      component: Multiplication
+    },
+    {
+      path: '/multiplication/:session',
+      name: 'multiplication-session',
+      component: Multiplication,
       props: true
     }
   ]
