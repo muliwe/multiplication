@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import VueLocalStorage from 'vue-localstorage'
+import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 import store from './store/index'
@@ -16,6 +17,8 @@ Vue.use(VueLocalStorage, {
   createComputed: true // created computed members from your variable declarations
 })
 
+Vue.use(BootstrapVue)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -25,13 +28,29 @@ new Vue({
   components: { App },
   data: function () {
     return {
+      currentApp: '', // empty is for multiplication app for consistency
       currentLevel: 0,
       stats: [].fill.call({length: 10}, 0)
     }
   },
   watch: {
+    currentApp: function (val) {
+      const self = this
+
+      reload(self)
+    },
     currentLevel: function (val) {
-      this.$ls.set('currentLevel', val)
+      const self = this
+
+      self.$ls.set(this.currentApp + 'currentLevel', val)
+
+      const values = []
+
+      for (let i = 0; i < 10; i++) {
+        values.push(self.stats[i] || 0)
+      }
+
+      this.$ls.set(this.currentApp + 'stats', values.join(','))
     },
     stats: function (val) {
       const values = []
@@ -40,18 +59,13 @@ new Vue({
         values.push(val[i] || 0)
       }
 
-      this.$ls.set('stats', values.join(','))
+      this.$ls.set(this.currentApp + 'stats', values.join(','))
     }
   },
   created: function () {
     const self = this
 
-    self.currentLevel = Number(self.$ls.get('currentLevel', 0)) // 0 is default value
-
-    const stats = self.$ls.get('stats', '0,0,0,0,0,0,0,0,0,0').split(',')
-    for (let i = 0; i < 10; i++) {
-      self.stats[i] = stats[i]
-    }
+    reload(self)
   },
   methods: {
     incrementLevel: function () {
@@ -65,12 +79,24 @@ new Vue({
       })
     },
     currentData: function () {
-      const self = this
-
       return {
-        currentLevel: self.currentLevel,
-        stats: self.stats
+        currentApp: this.currentApp,
+        currentLevel: this.currentLevel,
+        stats: this.stats
       }
     }
   }
 })
+
+function reload (vm) {
+  console.log(vm.currentApp, 'currentLevel', vm.$ls.get(vm.currentApp + 'currentLevel', 0))
+
+  vm.currentLevel = Number(vm.$ls.get(vm.currentApp + 'currentLevel', 0)) // 0 is default value
+
+  const stats = vm.$ls.get(vm.currentApp + 'stats', '0,0,0,0,0,0,0,0,0,0').split(',')
+  for (let i = 0; i < 10; i++) {
+    vm.stats[i] = stats[i]
+  }
+
+  console.log(vm.currentApp, 'stats', vm.$ls.get(vm.currentApp + 'stats', '0,0,0,0,0,0,0,0,0,0').split(','))
+}
