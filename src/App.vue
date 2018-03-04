@@ -131,6 +131,7 @@ div.keyboard {
   bottom: 0.5rem;
   width: 100%;
   z-index: 10;
+  left: 0;
 }
 div.keyboard div {
   line-height: 0.5;
